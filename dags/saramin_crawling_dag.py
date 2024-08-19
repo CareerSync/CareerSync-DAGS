@@ -31,7 +31,7 @@ user_agents = [
 #     options.add_argument("--disable-dev-shm-usage")
 #     return webdriver.Chrome(path, options=options)
 
-def get_job_urls(user_agents: list): # driver, page_count
+def get_job_urls(user_agents: list, **kwargs): # driver, page_count
     from bs4 import BeautifulSoup
     import time
     import requests
@@ -51,6 +51,15 @@ def get_job_urls(user_agents: list): # driver, page_count
             except Exception:
                 pass
     return url_list
+def process_job_urls(**kwargs):
+    ti = kwargs['ti']  # Task Instance 가져오기
+    url_list = ti.xcom_pull(task_ids='get_job_urls')  # get_job_urls Task에서 XCom으로 저장된 데이터 가져오기
+    
+    # 가져온 URL 리스트 처리
+    for url in url_list:
+        print(f"Processing URL: {url}")
+        # 여기서 원하는 처리를 수행
+
 
 # DAG 정의
 with DAG(
@@ -74,8 +83,13 @@ with DAG(
         op_args=[user_agents],  # 함수에 전달할 인자
         provide_context=True # kwargs를 함수에 전달
     )
+    process_job_urls_task = PythonOperator(
+        task_id='process_job_urls',
+        python_callable=process_job_urls,  # 실행할 Python 함수
+        provide_context=True  # kwargs를 함수에 전달
+    )
 
     # DAG에 작업 추가
     # init_driver_task >> get_job_urls_task
-    get_job_urls_task
+    get_job_urls_task >> process_job_urls_task
 
