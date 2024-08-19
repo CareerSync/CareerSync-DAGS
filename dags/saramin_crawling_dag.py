@@ -25,14 +25,14 @@ user_agents = [
 ]
 
 # Python 함수 정의 (작업 내용)
-def init_driver(path):
-    options = webdriver.ChromeOptions()
-    options.add_argument("--no-sandbox")
-    options.add_argument("--disable-dev-shm-usage")
-    return webdriver.Chrome(path, options=options)
+# def init_driver(path):
+#     options = webdriver.ChromeOptions()
+#     options.add_argument("--no-sandbox")
+#     options.add_argument("--disable-dev-shm-usage")
+#     return webdriver.Chrome(path, options=options)
 
-def get_job_urls(user_agents, driver, page_count):
-    from bs4 import BeautifulSoup, Comment
+def get_job_urls(user_agents: list): # driver, page_count
+    from bs4 import BeautifulSoup
     import time
     import requests
     url_list = []
@@ -62,11 +62,11 @@ with DAG(
 ) as dag:
 
     # PythonOperator를 사용한 작업 정의
-    init_driver_task = PythonOperator(
-        task_id='init_driver',
-        python_callable=init_driver, # 실행할 Python 함수
-        provide_context=True
-    )
+    # init_driver_task = PythonOperator(
+    #     task_id='init_driver',
+    #     python_callable=init_driver, # 실행할 Python 함수
+    #     provide_context=True
+    # )
 
     get_job_urls_task = PythonOperator(
         task_id='get_job_urls',
@@ -75,4 +75,6 @@ with DAG(
     )
 
     # DAG에 작업 추가
-    init_driver_task >> get_job_urls_task
+    # init_driver_task >> get_job_urls_task
+    get_job_urls_task
+
