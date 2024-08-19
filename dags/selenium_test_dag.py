@@ -13,6 +13,7 @@ default_args = {
     'email_on_retry': False,
     'retries': 1,
     'retry_delay': timedelta(minutes=5),
+    catchup=False,
 }
 
 # DAG 정의
