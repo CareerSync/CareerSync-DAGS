@@ -1,0 +1,29 @@
+name: Deploy DAGs to Azure VM
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Install SSH client
+      run: sudo apt-get install -y ssh
+
+    - name: Copy DAGs to Azure VM
+      env:
+        AZURE_VM_IP: ${{ secrets.AZURE_VM_IP }}
+        AZURE_VM_USER: ${{ secrets.AZURE_VM_USER }}
+        AZURE_SSH_PRIVATE_KEY: ${{ secrets.AZURE_SSH_PRIVATE_KEY }}
+      run: |
+        mkdir -p ~/.ssh
+        echo "${AZURE_SSH_PRIVATE_KEY}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+
+        rsync -avz -e "ssh -o StrictHostKeyChecking=no" ./dags/ ${AZURE_VM_USER}@${AZURE_VM_IP}:/path/to/azure/vm/dags/
