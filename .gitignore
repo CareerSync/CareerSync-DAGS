@@ -1,0 +1,5 @@
+# Ignore all .pem files
+*.pem
+*.key
+*.crt
+*.env
