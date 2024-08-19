@@ -71,7 +71,8 @@ with DAG(
     get_job_urls_task = PythonOperator(
         task_id='get_job_urls',
         python_callable=get_job_urls,  # 실행할 Python 함수
-        provide_context=True
+        op_args=[user_agents],  # 함수에 전달할 인자
+        provide_context=True # kwargs를 함수에 전달
     )
 
     # DAG에 작업 추가
