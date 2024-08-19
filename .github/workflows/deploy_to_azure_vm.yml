@@ -26,4 +26,4 @@ jobs:
         echo "${AZURE_SSH_PRIVATE_KEY}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
 
-        rsync -avz -e "ssh -o StrictHostKeyChecking=no" ./dags/ ${AZURE_VM_USER}@${AZURE_VM_IP}:/path/to/azure/vm/dags/
+        rsync -avz -e "ssh -o StrictHostKeyChecking=no" ./dags/ ${AZURE_VM_USER}@${AZURE_VM_IP}:/home/azureuser/dags/
