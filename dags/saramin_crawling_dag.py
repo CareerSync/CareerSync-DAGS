@@ -222,6 +222,14 @@ def task2(**kwargs):
     driver.quit()
     print('크롤링이 완료되었습니다.')
 
+def print_job_data(**kwargs):
+    try:
+        with open('job_data.jsonl', 'r', encoding='utf-8') as f:
+            for line in f:
+                print(line.strip())
+    except Exception as e:
+        print(f'Error reading job_data.jsonl: {e}')
+
 # DAG 정의
 with DAG(
     dag_id="saramin_crawling_dag",
@@ -243,7 +251,12 @@ with DAG(
         python_callable=task2,
         dag=dag,
     )
+    print_job_data_task = PythonOperator(
+        task_id='print_job_data_task',
+        python_callable=print_job_data,
+        dag=dag,
+    )
         # DAG에 작업 추가
         # init_driver_task >> get_job_urls_task
-    get_urls_task >> crawl_job_task
+    get_urls_task >> crawl_job_task >> print_job_data_task
 
