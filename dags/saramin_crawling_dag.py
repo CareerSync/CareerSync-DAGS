@@ -90,6 +90,7 @@ def extract_metadata(soup):
     return None
 
 def extract_basic_info(driver):
+    from selenium.webdriver.common.by import By
     dt = {'경력': 'Work_history', '학력': 'Education', '근무형태': 'Job_type'}
     job_info = {}
     for index in range(1, len(dt) + 1):
