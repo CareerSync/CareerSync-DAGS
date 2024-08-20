@@ -154,7 +154,6 @@ def task2(**kwargs):
     from bs4 import BeautifulSoup
     import time
     import requests
-    driver = init_driver()  # init_driver를 호출하여 driver 객체 생성
     today = datetime.now().strftime('%Y-%m-%d')
     headers = {'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3"}
     
@@ -162,6 +161,7 @@ def task2(**kwargs):
     
     with open('job_data.jsonl', 'w', encoding='utf-8') as f:
         for index, url in enumerate(url_list):
+            driver = init_driver()  # 각 URL마다 새로운 driver 인스턴스 생성
             job_info_all = {'Datetime': today}
             data = requests.get(url, headers=headers)
             soup = BeautifulSoup(data.text, 'html.parser')
@@ -219,8 +219,10 @@ def task2(**kwargs):
             execution_time_all = end_time_all - start_time_all
             print(f"{job_info_all.get('Co_name')} 크롤링 소요시간 : {round(execution_time_all, 2)} seconds")
 
-    driver.quit()
+            driver.quit()  # 각 URL 처리 후 WebDriver 세션 종료
+
     print('크롤링이 완료되었습니다.')
+
 
 def print_job_data(**kwargs):
     try:
