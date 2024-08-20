@@ -23,7 +23,9 @@ jobs:
         AZURE_SSH_PRIVATE_KEY: ${{ secrets.AZURE_SSH_PRIVATE_KEY }}
       run: |
         mkdir -p ~/.ssh
-        echo "${AZURE_SSH_PRIVATE_KEY}" > ~/.ssh/id_rsa
+        cat << 'EOF' > ~/.ssh/id_rsa
+        ${AZURE_SSH_PRIVATE_KEY}
+        EOF
         chmod 600 ~/.ssh/id_rsa
 
         rsync -avz -e "ssh -o StrictHostKeyChecking=no" ./dags/ ${AZURE_VM_USER}@${AZURE_VM_IP}:/home/azureuser/dags/
