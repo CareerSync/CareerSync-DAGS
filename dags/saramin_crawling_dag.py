@@ -242,7 +242,7 @@ with DAG(
     get_urls_task = PythonOperator(
         task_id='get_urls_task',
         python_callable=get_job_urls,
-        op_kwargs=user_agents,
+        op_kwargs={'user_agents' : 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'},
         dag=dag,
     )
 
