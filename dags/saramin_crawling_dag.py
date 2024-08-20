@@ -41,6 +41,7 @@ def get_job_urls(user_agents: list, **kwargs): # driver, page_count
     from bs4 import BeautifulSoup
     import time
     import requests
+    import random
     url_list = []
     for page in range(1, 1 + 1): # page_count + 1
         user_agent = user_agents[page % len(user_agents)]
@@ -244,7 +245,7 @@ with DAG(
     get_urls_task = PythonOperator(
         task_id='get_urls_task',
         python_callable=get_job_urls,
-        op_kwargs={'user_agents' : 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'},
+        op_kwargs={'user_agents' : user_agents},
         dag=dag,
     )
 
